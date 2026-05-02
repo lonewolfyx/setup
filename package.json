@@ -36,24 +36,24 @@
     },
     "dependencies": {
         "@clack/prompts": "^1.0.0",
-        "citty": "^0.2.0",
-        "defu": "^6.1.4",
+        "citty": "^0.2.2",
+        "defu": "^6.1.7",
         "find-up": "^8.0.0",
-        "glob": "^13.0.1",
+        "glob": "^13.0.6",
         "jiti": "^2.6.1"
     },
     "devDependencies": {
-        "@antfu/eslint-config": "^7.3.0",
+        "@antfu/eslint-config": "^8.2.0",
         "@lonewolfyx/tsconfig": "^0.0.6",
-        "@types/node": "^25.2.1",
-        "eslint": "^10.0.0",
-        "lint-staged": "^16.2.7",
+        "@types/node": "^25.6.0",
+        "eslint": "^10.3.0",
+        "lint-staged": "^16.4.0",
         "picocolors": "^1.1.1",
         "simple-git-hooks": "^2.13.1",
-        "tsdown": "^0.20.3",
-        "tsdown-preset": "^1.0.3",
+        "tsdown": "^0.21.10",
+        "tsdown-preset": "^1.0.6",
         "tsx": "^4.21.0",
-        "typescript": "^5.9.3"
+        "typescript": "^6.0.3"
     },
     "simple-git-hooks": {
         "pre-commit": "npx lint-staged",

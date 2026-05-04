@@ -2,7 +2,22 @@ import { access, readdir, rm } from 'node:fs/promises'
 import path from 'node:path'
 import { confirm, intro, isCancel, outro, spinner } from '@clack/prompts'
 import { createMain, defineCommand } from 'citty'
+import { x } from 'tinyexec'
 import { description, name, version } from '../package.json'
+
+/**
+ * 检测包管理器是否存在
+ * @param command 包管理器命令名称
+ */
+async function hasPackageManager(command: string): Promise<boolean> {
+    try {
+        await x(command, ['--version'], { throwOnError: true })
+        return true
+    }
+    catch {
+        return false
+    }
+}
 
 /**
  * 清空目录内容，保留 .git 目录
@@ -76,7 +91,16 @@ const command = defineCommand({
             loading.stop('目录已清空')
         }
 
-        outro('操作完成')
+        // 创建 package.json 文件
+        const initLoading = spinner()
+        initLoading.start('正在检测包管理器...')
+
+        const hasPnpm = await hasPackageManager('pnpm')
+        initLoading.message('项目初始化...')
+
+        await x(hasPnpm ? 'pnpm' : 'npm', hasPnpm ? ['init'] : ['init', '-y'], { nodeOptions: { cwd } })
+
+        initLoading.stop('package.json 创建完成')
     },
 })
 

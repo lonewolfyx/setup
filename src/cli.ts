@@ -112,6 +112,32 @@ const command = defineCommand({
         await writePackageJSON(packageJsonPath, packageJson)
 
         typeLoading.stop('package.json 配置完成')
+
+        // 安装开发依赖
+        const depsLoading = spinner()
+        depsLoading.start('正在安装开发依赖...')
+
+        const devDeps = [
+            'eslint',
+            '@antfu/eslint-config',
+            'typescript',
+            '@lonewolfyx/tsconfig',
+            '@types/node',
+            'lint-staged',
+            'simple-git-hooks',
+            'picocolors',
+            'tsx',
+            'tsdown',
+        ]
+
+        const addCmd = hasPnpm ? 'pnpm' : 'npm'
+        const addArgs = hasPnpm
+            ? ['add', '-D', ...devDeps]
+            : ['install', '-D', ...devDeps]
+
+        await x(addCmd, addArgs, { nodeOptions: { cwd } })
+
+        depsLoading.stop('开发依赖安装完成')
     },
 })
 

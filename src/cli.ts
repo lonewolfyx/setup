@@ -1,8 +1,32 @@
-import { access } from 'node:fs/promises'
+import { access, readdir, rm } from 'node:fs/promises'
 import path from 'node:path'
-import { confirm, intro, isCancel, outro } from '@clack/prompts'
+import { confirm, intro, isCancel, outro, spinner } from '@clack/prompts'
 import { createMain, defineCommand } from 'citty'
 import { description, name, version } from '../package.json'
+
+/**
+ * 清空目录内容，保留 .git 目录
+ * @param dirPath 目录路径
+ */
+async function clearDirectory(dirPath: string): Promise<void> {
+    const entries = await readdir(dirPath, { withFileTypes: true })
+
+    for (const entry of entries) {
+        // 保留 .git 目录
+        if (entry.name === '.git') {
+            continue
+        }
+
+        const fullPath = path.join(dirPath, entry.name)
+        console.log(fullPath)
+        if (entry.isDirectory()) {
+            await rm(fullPath, { recursive: true, force: true })
+        }
+        else {
+            await rm(fullPath, { force: true })
+        }
+    }
+}
 
 const command = defineCommand({
     meta: {
@@ -45,7 +69,11 @@ const command = defineCommand({
                 return
             }
 
-            // TODO: 清空目录内容
+            // 清空目录内容
+            const loading = spinner()
+            loading.start('正在清空目录...')
+            await clearDirectory(cwd)
+            loading.stop('目录已清空')
         }
 
         outro('操作完成')

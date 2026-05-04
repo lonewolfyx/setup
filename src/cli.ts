@@ -51,10 +51,10 @@ const command = defineCommand({
         description,
     },
     setup() {
-        console.log('Setup')
+        intro('项目初始化')
     },
     cleanup() {
-        console.log('Cleanup')
+        outro('Done. 项目初始化完成')
     },
     args: {
         cwd: {
@@ -72,8 +72,6 @@ const command = defineCommand({
         const packageJsonExists = await access(packageJsonPath)
             .then(() => true)
             .catch(() => false)
-
-        intro('项目初始化')
 
         const progress = spinner()
 

@@ -135,7 +135,7 @@ const command = defineCommand({
             ? ['add', '-D', ...devDeps]
             : ['install', '-D', ...devDeps]
 
-        // await x(addCmd, addArgs, { nodeOptions: { cwd } })
+        await x(addCmd, addArgs, { nodeOptions: { cwd } })
 
         depsLoading.stop('开发依赖安装完成')
 

@@ -18,7 +18,7 @@ async function clearDirectory(dirPath: string): Promise<void> {
         }
 
         const fullPath = path.join(dirPath, entry.name)
-        console.log(fullPath)
+
         if (entry.isDirectory()) {
             await rm(fullPath, { recursive: true, force: true })
         }

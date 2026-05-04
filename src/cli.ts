@@ -2,7 +2,7 @@ import { access, mkdir, readdir, rm, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { confirm, intro, isCancel, outro, spinner } from '@clack/prompts'
 import { createMain, defineCommand } from 'citty'
-import { readPackageJSON, writePackageJSON } from 'pkg-types'
+import { readPackageJSON, writePackageJSON, writeTSConfig } from 'pkg-types'
 import { x } from 'tinyexec'
 import { description, name, version } from '../package.json'
 
@@ -135,7 +135,7 @@ const command = defineCommand({
             ? ['add', '-D', ...devDeps]
             : ['install', '-D', ...devDeps]
 
-        await x(addCmd, addArgs, { nodeOptions: { cwd } })
+        // await x(addCmd, addArgs, { nodeOptions: { cwd } })
 
         depsLoading.stop('开发依赖安装完成')
 
@@ -181,6 +181,39 @@ const command = defineCommand({
         await writeFile(verifyCommitPath, verifyCommitContent)
 
         scriptsLoading.stop('git hooks 配置文件创建完成')
+
+        // 创建 tsconfig.json 文件
+        const tsconfigLoading = spinner()
+        tsconfigLoading.start('正在创建 tsconfig.json...')
+
+        const tsconfigPath = path.join(cwd, 'tsconfig.json')
+
+        const tsconfigConfig = {
+            extends: '@lonewolfyx/tsconfig/tsconfig.lib.json',
+            compilerOptions: {
+                baseUrl: './',
+                paths: {
+                    '@/*': [
+                        './src/*',
+                    ],
+                    '#/*': [
+                        './src/types/*',
+                        './types/*',
+                    ],
+                },
+                resolveJsonModule: true,
+                types: [
+                    'node',
+                ],
+                noUnusedLocals: false,
+                noUnusedParameters: false,
+                declarationMap: false,
+            },
+        }
+
+        await writeTSConfig(path.resolve(cwd, 'tsconfig.json'), tsconfigConfig)
+
+        tsconfigLoading.stop('tsconfig.json 创建完成')
     },
 })
 

@@ -75,6 +75,8 @@ const command = defineCommand({
 
         intro('项目初始化')
 
+        const progress = spinner()
+
         if (packageJsonExists) {
             const shouldOverwrite = await confirm({
                 message: '检测到当前目录已存在项目，是否覆盖创建新项目？（将清空当前目录下所有文件）',
@@ -86,36 +88,32 @@ const command = defineCommand({
             }
 
             // 清空目录内容
-            const loading = spinner()
-            loading.start('正在清空目录...')
+            progress.start('正在清空目录...')
             await clearDirectory(cwd)
-            loading.stop('目录已清空')
+            progress.stop('目录已清空')
         }
 
         // 创建 package.json 文件
-        const initLoading = spinner()
-        initLoading.start('正在检测包管理器...')
+        progress.start('正在检测包管理器...')
 
         const hasPnpm = await hasPackageManager('pnpm')
-        initLoading.message('项目初始化...')
+        progress.message('项目初始化...')
 
         await x(hasPnpm ? 'pnpm' : 'npm', hasPnpm ? ['init'] : ['init', '-y'], { nodeOptions: { cwd } })
 
-        initLoading.stop('package.json 创建完成')
+        progress.stop('package.json 创建完成')
 
         // 添加 "type": "module" 配置
-        const typeLoading = spinner()
-        typeLoading.start('正在配置 package.json...')
+        progress.start('正在配置 package.json...')
 
         const packageJson = await readPackageJSON(cwd)
         packageJson.type = 'module'
         await writePackageJSON(packageJsonPath, packageJson)
 
-        typeLoading.stop('package.json 配置完成')
+        progress.stop('package.json 配置完成')
 
         // 安装开发依赖
-        const depsLoading = spinner()
-        depsLoading.start('正在安装开发依赖...')
+        progress.start('正在安装开发依赖...')
 
         const devDeps = [
             'eslint',
@@ -137,11 +135,10 @@ const command = defineCommand({
 
         await x(addCmd, addArgs, { nodeOptions: { cwd } })
 
-        depsLoading.stop('开发依赖安装完成')
+        progress.stop('开发依赖安装完成')
 
         // 创建 scripts/verify-commit.js 文件
-        const scriptsLoading = spinner()
-        scriptsLoading.start('正在创建 git hooks 配置文件...')
+        progress.start('正在创建 git hooks 配置文件...')
 
         const scriptsDir = path.join(cwd, 'scripts')
         await mkdir(scriptsDir, { recursive: true })
@@ -180,11 +177,10 @@ const command = defineCommand({
 
         await writeFile(verifyCommitPath, verifyCommitContent)
 
-        scriptsLoading.stop('git hooks 配置文件创建完成')
+        progress.stop('git hooks 配置文件创建完成')
 
         // 创建 tsconfig.json 文件
-        const tsconfigLoading = spinner()
-        tsconfigLoading.start('正在创建 tsconfig.json...')
+        progress.start('正在创建 tsconfig.json...')
 
         const tsconfigConfig = {
             extends: '@lonewolfyx/tsconfig/tsconfig.lib.json',
@@ -211,11 +207,10 @@ const command = defineCommand({
 
         await writeTSConfig(path.resolve(cwd, 'tsconfig.json'), tsconfigConfig)
 
-        tsconfigLoading.stop('tsconfig.json 创建完成')
+        progress.stop('tsconfig.json 创建完成')
 
         // 添加 git hooks 配置到 package.json
-        const gitHooksLoading = spinner()
-        gitHooksLoading.start('正在添加 git hooks 配置...')
+        progress.start('正在添加 git hooks 配置...')
 
         const newPackageJson = await readPackageJSON(cwd)
         newPackageJson.simpleGitHooks = {
@@ -228,11 +223,10 @@ const command = defineCommand({
 
         await writePackageJSON(packageJsonPath, newPackageJson)
 
-        gitHooksLoading.stop('git hooks 配置添加完成')
+        progress.stop('git hooks 配置添加完成')
 
         // 创建 eslint.config.ts 文件
-        const eslintLoading = spinner()
-        eslintLoading.start('正在创建 ESLint 配置文件...')
+        progress.start('正在创建 ESLint 配置文件...')
 
         const eslintConfigContent = `import type { Linter } from 'eslint'
 import antfu from '@antfu/eslint-config'
@@ -261,7 +255,7 @@ export default config`
         const eslintConfigPath = path.join(cwd, 'eslint.config.ts')
         await writeFile(eslintConfigPath, eslintConfigContent)
 
-        eslintLoading.stop('ESLint 配置文件创建完成')
+        progress.stop('ESLint 配置文件创建完成')
     },
 })
 

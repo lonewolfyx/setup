@@ -214,6 +214,23 @@ const command = defineCommand({
         await writeTSConfig(path.resolve(cwd, 'tsconfig.json'), tsconfigConfig)
 
         tsconfigLoading.stop('tsconfig.json 创建完成')
+
+        // 添加 git hooks 配置到 package.json
+        const gitHooksLoading = spinner()
+        gitHooksLoading.start('正在添加 git hooks 配置...')
+
+        const newPackageJson = await readPackageJSON(cwd)
+        newPackageJson.simpleGitHooks = {
+            'pre-commit': 'npx lint-staged',
+            'commit-msg': 'node scripts/verify-commit.js',
+        }
+        newPackageJson.lintStaged = {
+            '*': 'eslint --fix',
+        }
+
+        await writePackageJSON(packageJsonPath, newPackageJson)
+
+        gitHooksLoading.stop('git hooks 配置添加完成')
     },
 })
 

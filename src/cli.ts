@@ -1,4 +1,4 @@
-import { access, readdir, rm } from 'node:fs/promises'
+import { access, mkdir, readdir, rm, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { confirm, intro, isCancel, outro, spinner } from '@clack/prompts'
 import { createMain, defineCommand } from 'citty'
@@ -138,6 +138,49 @@ const command = defineCommand({
         await x(addCmd, addArgs, { nodeOptions: { cwd } })
 
         depsLoading.stop('开发依赖安装完成')
+
+        // 创建 scripts/verify-commit.js 文件
+        const scriptsLoading = spinner()
+        scriptsLoading.start('正在创建 git hooks 配置文件...')
+
+        const scriptsDir = path.join(cwd, 'scripts')
+        await mkdir(scriptsDir, { recursive: true })
+
+        const verifyCommitPath = path.join(scriptsDir, 'verify-commit.js')
+        const verifyCommitContent = 'import { readFileSync } from \'node:fs\'\n'
+            + 'import path from \'node:path\'\n'
+            + '// @ts-check\n'
+            + 'import pico from \'picocolors\'\n'
+            + '\n'
+            + 'const msgPath = path.resolve(\'.git/COMMIT_EDITMSG\')\n'
+            + 'const msg = readFileSync(msgPath, \'utf-8\').trim()\n'
+            + '\n'
+            + 'const commitRE\n'
+            + '    = /^(revert: )?(feat|fix|docs|dx|style|refactor|perf|test|workflow|build|ci|chore|types|wip|release)(\\(.+\\))?: .{1,50}/\n'
+            + '\n'
+            + 'if (!commitRE.test(msg)) {\n'
+            + '    console.log()\n'
+            + '    console.error(\n'
+            // eslint-disable-next-line no-template-curly-in-string
+            + '        `  ${pico.white(pico.bgRed(\' ERROR \'))} ${pico.red(\n'
+            + '            `invalid commit message format.`,\n'
+            + '        )}\\n\\n${\n'
+            + '            pico.red(\n'
+            + '                `  Proper commit message format is required for automated changelog generation. Examples:\\n\\n`,\n'
+            + '            )\n'
+            // eslint-disable-next-line no-template-curly-in-string
+            + '        }    ${pico.green(`feat(compiler): add \'comments\' option`)}\\n`\n'
+            + '        + `    ${pico.green(\n'
+            + '            `fix(v-model): handle events on blur (close #28)`,\n'
+            + '        )}\\n\\n${\n'
+            + '            pico.red(`  See .github/commit-convention.md for more details.\\n`)}`,\n'
+            + '    )\n'
+            + '    process.exit(1)\n'
+            + '}\n'
+
+        await writeFile(verifyCommitPath, verifyCommitContent)
+
+        scriptsLoading.stop('git hooks 配置文件创建完成')
     },
 })
 

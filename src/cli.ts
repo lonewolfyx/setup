@@ -2,6 +2,7 @@ import { access, readdir, rm } from 'node:fs/promises'
 import path from 'node:path'
 import { confirm, intro, isCancel, outro, spinner } from '@clack/prompts'
 import { createMain, defineCommand } from 'citty'
+import { readPackageJSON, writePackageJSON } from 'pkg-types'
 import { x } from 'tinyexec'
 import { description, name, version } from '../package.json'
 
@@ -101,6 +102,16 @@ const command = defineCommand({
         await x(hasPnpm ? 'pnpm' : 'npm', hasPnpm ? ['init'] : ['init', '-y'], { nodeOptions: { cwd } })
 
         initLoading.stop('package.json 创建完成')
+
+        // 添加 "type": "module" 配置
+        const typeLoading = spinner()
+        typeLoading.start('正在配置 package.json...')
+
+        const packageJson = await readPackageJSON(cwd)
+        packageJson.type = 'module'
+        await writePackageJSON(packageJsonPath, packageJson)
+
+        typeLoading.stop('package.json 配置完成')
     },
 })
 

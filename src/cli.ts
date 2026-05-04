@@ -186,8 +186,6 @@ const command = defineCommand({
         const tsconfigLoading = spinner()
         tsconfigLoading.start('正在创建 tsconfig.json...')
 
-        const tsconfigPath = path.join(cwd, 'tsconfig.json')
-
         const tsconfigConfig = {
             extends: '@lonewolfyx/tsconfig/tsconfig.lib.json',
             compilerOptions: {

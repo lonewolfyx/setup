@@ -9,6 +9,7 @@ export async function installDevDeps(cwd: string): Promise<void> {
     const devDeps = [
         'eslint',
         '@antfu/eslint-config',
+        'jiti',
         'typescript',
         '@lonewolfyx/tsconfig',
         '@types/node',

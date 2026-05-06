@@ -7,11 +7,17 @@ import { readPackageJSON, writePackageJSON } from 'pkg-types'
  */
 export async function configPackageJson(cwd: string, packageJsonPath: string): Promise<void> {
     const packageJson = await readPackageJSON(cwd)
+
+    if (packageJson.main) {
+        delete packageJson.main
+    }
+
     packageJson.type = 'module'
     packageJson.scripts = {
         ...packageJson.scripts,
         'lint': 'eslint .',
         'lint:fix': 'eslint --fix',
     }
+
     await writePackageJSON(packageJsonPath, packageJson)
 }

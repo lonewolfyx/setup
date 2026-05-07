@@ -17,6 +17,7 @@ export async function configPackageJson(cwd: string, packageJsonPath: string): P
         ...packageJson.scripts,
         'lint': 'eslint .',
         'lint:fix': 'eslint --fix',
+        'prepare': 'simple-git-hooks',
     }
 
     await writePackageJSON(packageJsonPath, packageJson)

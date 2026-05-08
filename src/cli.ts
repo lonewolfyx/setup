@@ -1,8 +1,8 @@
 import { access } from 'node:fs/promises'
-import path from 'node:path'
 import { confirm, intro, isCancel, outro } from '@clack/prompts'
 import { createMain, defineCommand } from 'citty'
 import { description, name, version } from '../package.json'
+import { resolveConfig } from './config'
 import { schedule } from './schedule.ts'
 import { addGitHooksConfig } from './task/addGitHooksConfig'
 import { clearDirectory } from './task/clearDirectory'
@@ -35,10 +35,10 @@ const command = defineCommand({
     },
     async run({ args }) {
         const cwd = args.cwd as string
-        const packageJsonPath = path.join(cwd, 'package.json')
+        const config = await resolveConfig(cwd)
 
         // 检测 package.json 是否存在
-        const packageJsonExists = await access(packageJsonPath)
+        const packageJsonExists = await access(config.packageJsonPath)
             .then(() => true)
             .catch(() => false)
 
@@ -52,17 +52,17 @@ const command = defineCommand({
                 return
             }
 
-            await clearDirectory(cwd)
+            await clearDirectory(config.cwd)
         }
 
         await schedule()
-            .step('正在创建 package.json...', () => createPackageJson(cwd), 'package.json 创建完成')
-            .step('正在配置 package.json...', () => configPackageJson(cwd, packageJsonPath), 'package.json 配置完成')
-            .step('正在安装开发依赖...', () => installDevDeps(cwd), '开发依赖安装完成')
-            .step('正在创建 git hooks 配置文件...', () => createGitHooks(cwd), 'git hooks 配置文件创建完成')
-            .step('正在创建 tsconfig.json...', () => createTsConfig(cwd), 'tsconfig.json 创建完成')
-            .step('正在添加 git hooks 配置...', () => addGitHooksConfig(cwd, packageJsonPath), 'git hooks 配置添加完成')
-            .step('正在创建 ESLint 配置文件...', () => createEslintConfig(cwd), 'ESLint 配置文件创建完成')
+            .step('正在创建 package.json...', () => createPackageJson(config), 'package.json 创建完成')
+            .step('正在配置 package.json...', () => configPackageJson(config), 'package.json 配置完成')
+            .step('正在安装开发依赖...', () => installDevDeps(config), '开发依赖安装完成')
+            .step('正在创建 git hooks 配置文件...', () => createGitHooks(config), 'git hooks 配置文件创建完成')
+            .step('正在创建 tsconfig.json...', () => createTsConfig(config), 'tsconfig.json 创建完成')
+            .step('正在添加 git hooks 配置...', () => addGitHooksConfig(config), 'git hooks 配置添加完成')
+            .step('正在创建 ESLint 配置文件...', () => createEslintConfig(config), 'ESLint 配置文件创建完成')
             .done()
     },
 })

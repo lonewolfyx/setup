@@ -1,11 +1,8 @@
-import path from 'node:path'
+import type { IConfig } from '../types'
+import { resolve } from 'node:path'
 import { writeTSConfig } from 'pkg-types'
 
-/**
- * 创建 tsconfig.json 文件
- * @param cwd 当前工作目录
- */
-export async function createTsConfig(cwd: string): Promise<void> {
+export async function createTsConfig(config: IConfig): Promise<void> {
     const tsconfigConfig = {
         extends: '@lonewolfyx/tsconfig/tsconfig.lib.json',
         compilerOptions: {
@@ -29,5 +26,5 @@ export async function createTsConfig(cwd: string): Promise<void> {
         },
     }
 
-    await writeTSConfig(path.resolve(cwd, 'tsconfig.json'), tsconfigConfig)
+    await writeTSConfig(resolve(config.cwd, 'tsconfig.json'), tsconfigConfig)
 }

@@ -9,6 +9,7 @@ import { clearDirectory } from './task/clearDirectory'
 import { configPackageJson } from './task/configPackageJson'
 import { createEslintConfig } from './task/createEslintConfig'
 import { createGitHooks } from './task/createGitHooks'
+import { createGithubWorkflows } from './task/createGithubWorkflows'
 import { createPackageJson } from './task/createPackageJson'
 import { createTsConfig } from './task/createTsConfig'
 import { installDevDeps } from './task/installDevDeps'
@@ -63,6 +64,7 @@ const command = defineCommand({
             .step('正在创建 tsconfig.json...', () => createTsConfig(config), 'tsconfig.json 创建完成')
             .step('正在添加 git hooks 配置...', () => addGitHooksConfig(config), 'git hooks 配置添加完成')
             .step('正在创建 ESLint 配置文件...', () => createEslintConfig(config), 'ESLint 配置文件创建完成')
+            .step('正在创建 GitHub Workflows...', () => createGithubWorkflows(config), 'GitHub Workflows 创建完成')
             .done()
     },
 })

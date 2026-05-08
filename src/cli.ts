@@ -1,18 +1,10 @@
 import { access } from 'node:fs/promises'
 import { confirm, intro, isCancel, outro } from '@clack/prompts'
 import { createMain, defineCommand } from 'citty'
+import { addGitHooksConfig, clearDirectory, configPackageJson, createEslintConfig, createGitHooks, createGithubWorkflows, createPackageJson, createTsConfig, installDevDeps } from '@/task'
 import { description, name, version } from '../package.json'
 import { resolveConfig } from './config'
 import { schedule } from './schedule.ts'
-import { addGitHooksConfig } from './task/addGitHooksConfig'
-import { clearDirectory } from './task/clearDirectory'
-import { configPackageJson } from './task/configPackageJson'
-import { createEslintConfig } from './task/createEslintConfig'
-import { createGitHooks } from './task/createGitHooks'
-import { createGithubWorkflows } from './task/createGithubWorkflows'
-import { createPackageJson } from './task/createPackageJson'
-import { createTsConfig } from './task/createTsConfig'
-import { installDevDeps } from './task/installDevDeps'
 
 const command = defineCommand({
     meta: {

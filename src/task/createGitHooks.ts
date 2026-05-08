@@ -1,12 +1,9 @@
+import type { IConfig } from '../types'
 import { mkdir, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 
-/**
- * 创建 git hooks 配置文件
- * @param cwd 当前工作目录
- */
-export async function createGitHooks(cwd: string): Promise<void> {
-    const scriptsDir = path.join(cwd, 'scripts')
+export async function createGitHooks(config: IConfig): Promise<void> {
+    const scriptsDir = path.join(config.cwd, 'scripts')
     await mkdir(scriptsDir, { recursive: true })
 
     const verifyCommitPath = path.join(scriptsDir, 'verify-commit.js')

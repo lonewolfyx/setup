@@ -1,11 +1,8 @@
+import type { IConfig } from '../types'
 import { x } from 'tinyexec'
-import { hasPackageManager } from './utils'
 
-/**
- * 安装开发依赖
- * @param cwd 当前工作目录
- */
-export async function installDevDeps(cwd: string): Promise<void> {
+export async function installDevDeps(config: IConfig): Promise<void> {
+    const { cwd, packageManager } = config
     const devDeps = [
         'eslint',
         '@antfu/eslint-config',
@@ -20,11 +17,9 @@ export async function installDevDeps(cwd: string): Promise<void> {
         'tsdown',
     ]
 
-    const hasPnpm = await hasPackageManager('pnpm')
-    const addCmd = hasPnpm ? 'pnpm' : 'npm'
-    const addArgs = hasPnpm
+    const addArgs = packageManager === 'pnpm'
         ? ['add', '-D', ...devDeps]
         : ['install', '-D', ...devDeps]
 
-    await x(addCmd, addArgs, { nodeOptions: { cwd } })
+    await x(packageManager, addArgs, { nodeOptions: { cwd } })
 }

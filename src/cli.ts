@@ -2,6 +2,7 @@ import { access } from 'node:fs/promises'
 import { confirm, intro, isCancel, outro } from '@clack/prompts'
 import { createMain, defineCommand } from 'citty'
 import { addGitHooksConfig, clearDirectory, configPackageJson, createEslintConfig, createGitHooks, createGithubWorkflows, createPackageJson, createTsConfig, installDevDeps } from '@/task'
+import { createGitignore } from '@/task/createGitignore.ts'
 import { description, name, version } from '../package.json'
 import { resolveConfig } from './config'
 import { schedule } from './schedule.ts'
@@ -55,6 +56,7 @@ const command = defineCommand({
             .step('正在创建 git hooks 配置文件...', () => createGitHooks(config), 'git hooks 配置文件创建完成')
             .step('正在创建 tsconfig.json...', () => createTsConfig(config), 'tsconfig.json 创建完成')
             .step('正在添加 git hooks 配置...', () => addGitHooksConfig(config), 'git hooks 配置添加完成')
+            .step('正在创建 .gitignore 文件', () => createGitignore(config), '.gitignore 创建完成')
             .step('正在创建 ESLint 配置文件...', () => createEslintConfig(config), 'ESLint 配置文件创建完成')
             .step('正在创建 GitHub Workflows...', () => createGithubWorkflows(config), 'GitHub Workflows 创建完成')
             .done()

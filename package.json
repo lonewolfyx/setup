@@ -1,7 +1,7 @@
 {
     "name": "@lonewolfyx/setup",
     "type": "module",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "packageManager": "pnpm@10.33.2",
     "description": "Instant project boilerplate setup",
     "author": "lonewolfyx <olddrivero.king@qq.com>",

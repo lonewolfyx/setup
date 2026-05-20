@@ -25,5 +25,10 @@ export async function configPackageJson(config: IConfig): Promise<void> {
         '*': 'eslint --fix',
     }
 
+    packageJson.publishConfig = {
+        registry: 'https://registry.npmjs.org',
+        access: 'public',
+    }
+
     await writePackageJSON(packageJsonPath, packageJson)
 }

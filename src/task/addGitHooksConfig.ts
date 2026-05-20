@@ -4,7 +4,7 @@ import { readPackageJSON, writePackageJSON } from 'pkg-types'
 export async function addGitHooksConfig(config: IConfig): Promise<void> {
     const { cwd, packageJsonPath } = config
     const newPackageJson = await readPackageJSON(cwd)
-    newPackageJson.simpleGitHooks = {
+    newPackageJson['simple-git-hooks'] = {
         'pre-commit': 'npx nano-staged',
         'commit-msg': 'node scripts/verify-commit.js',
     }

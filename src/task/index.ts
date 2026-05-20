@@ -1,4 +1,3 @@
-export * from './addGitHooksConfig'
 export * from './clearDirectory'
 export * from './configPackageJson'
 export * from './createEslintConfig'

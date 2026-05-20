@@ -2,7 +2,6 @@ import { access } from 'node:fs/promises'
 import { confirm, intro, isCancel, outro } from '@clack/prompts'
 import { createMain, defineCommand } from 'citty'
 import {
-    addGitHooksConfig,
     clearDirectory,
     configPackageJson,
     createEslintConfig,
@@ -60,14 +59,13 @@ const command = defineCommand({
         }
 
         await schedule()
-            .step('正在创建 package.json...', () => createPackageJson(config), 'package.json 创建完成')
-            .step('正在配置 package.json...', () => configPackageJson(config), 'package.json 配置完成')
-            .step('正在安装开发依赖...', () => installDevDeps(config), '开发依赖安装完成')
-            .step('正在创建 git verify commit 配置文件...', () => createGitVerifyCommit(config), 'git verify commit 配置文件创建完成')
-            .step('正在创建 tsconfig.json...', () => createTsConfig(config), 'tsconfig.json 创建完成')
-            .step('正在添加 git hooks 配置...', () => addGitHooksConfig(config), 'git hooks 配置添加完成')
             .step('正在创建 .gitignore 文件', () => createGitignore(config), '.gitignore 创建完成')
+            .step('正在创建 package.json...', () => createPackageJson(config), 'package.json 创建完成')
+            .step('正在安装开发依赖...', () => installDevDeps(config), '开发依赖安装完成')
+            .step('正在创建 tsconfig.json...', () => createTsConfig(config), 'tsconfig.json 创建完成')
+            .step('正在创建 git verify commit 配置文件...', () => createGitVerifyCommit(config), 'git verify commit 配置文件创建完成')
             .step('正在创建 ESLint 配置文件...', () => createEslintConfig(config), 'ESLint 配置文件创建完成')
+            .step('正在配置 package.json...', () => configPackageJson(config), 'package.json 配置完成')
             .step('正在创建 GitHub Workflows...', () => createGithubWorkflows(config), 'GitHub Workflows 创建完成')
             .done()
     },

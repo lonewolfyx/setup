@@ -2,7 +2,7 @@ import type { IConfig } from '../types'
 import { mkdir, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 
-export async function createGitHooks(config: IConfig): Promise<void> {
+export async function createGitVerifyCommit(config: IConfig): Promise<void> {
     const scriptsDir = path.join(config.cwd, 'scripts')
     await mkdir(scriptsDir, { recursive: true })
 

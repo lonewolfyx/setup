@@ -8,6 +8,7 @@ import antfu from '@antfu/eslint-config'
 
 const config = antfu({
     type: 'lib',
+    typescript: true,
     stylistic: {
         indent: 4,
         quotes: 'single',

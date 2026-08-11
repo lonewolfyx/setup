@@ -7,7 +7,7 @@ export async function installDevDeps(config: IConfig): Promise<void> {
         'eslint',
         '@antfu/eslint-config',
         'jiti',
-        'typescript',
+        'typescript@6',
         '@lonewolfyx/tsconfig',
         '@types/node',
         'lint-staged',

@@ -19,7 +19,7 @@ export async function configPackageJson(config: IConfig): Promise<void> {
 
     packageJson['simple-git-hooks'] = {
         'pre-commit': 'npx nano-staged',
-        'commit-msg': 'node scripts/verify-commit.js',
+        'commit-msg': 'npx verify-git-commit',
     }
     packageJson['nano-staged'] = {
         '*': 'eslint --fix',

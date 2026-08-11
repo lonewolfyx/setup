@@ -15,6 +15,7 @@ export async function installDevDeps(config: IConfig): Promise<void> {
         'picocolors',
         'tsx',
         'tsdown',
+        'verify-git-commit',
     ]
 
     const addArgs = packageManager === 'pnpm'

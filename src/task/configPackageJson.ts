@@ -18,10 +18,10 @@ export async function configPackageJson(config: IConfig): Promise<void> {
     }
 
     packageJson['simple-git-hooks'] = {
-        'pre-commit': 'npx nano-staged',
+        'pre-commit': 'npx lint-staged',
         'commit-msg': 'npx verify-git-commit',
     }
-    packageJson['nano-staged'] = {
+    packageJson['lint-staged'] = {
         '*': 'eslint --fix',
     }
 

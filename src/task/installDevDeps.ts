@@ -10,7 +10,7 @@ export async function installDevDeps(config: IConfig): Promise<void> {
         'typescript',
         '@lonewolfyx/tsconfig',
         '@types/node',
-        'nano-staged',
+        'lint-staged',
         'simple-git-hooks',
         'picocolors',
         'tsx',
